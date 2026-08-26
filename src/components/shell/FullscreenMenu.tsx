@@ -228,10 +228,10 @@ export function FullscreenMenu({
       <div className="shell relative flex flex-wrap items-center justify-between gap-4 pb-[var(--space-md)]">
         <p className="micro max-w-[40ch] normal-case tracking-normal">{site.pitch}</p>
         <div className="flex gap-[clamp(16px,2vw,36px)]">
-          <a className="micro hover:opacity-60" href={links.github} target="_blank" rel="noreferrer noopener">
+          <a data-tap className="micro hover:opacity-60" href={links.github} target="_blank" rel="noreferrer noopener">
             GitHub
           </a>
-          <a className="micro hover:opacity-60" href={`mailto:${links.email}`}>
+          <a data-tap className="micro hover:opacity-60" href={`mailto:${links.email}`}>
             Email
           </a>
         </div>

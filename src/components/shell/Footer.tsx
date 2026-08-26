@@ -44,7 +44,8 @@ export function Footer() {
             <ul className="flex flex-col gap-1">
               {nav.slice(0, 4).map((n) => (
                 <li key={n.href}>
-                  <Link href={n.href} className="body !text-[var(--t-small)] transition-opacity duration-[--dur-fast] hover:opacity-60">
+                  <Link href={n.href} data-tap
+                    className="body !text-[var(--t-small)] transition-opacity duration-[--dur-fast] hover:opacity-60">
                     {n.label}
                   </Link>
                 </li>
@@ -57,7 +58,8 @@ export function Footer() {
             <ul className="flex flex-col gap-1">
               {nav.slice(4).map((n) => (
                 <li key={n.href}>
-                  <Link href={n.href} className="body !text-[var(--t-small)] transition-opacity duration-[--dur-fast] hover:opacity-60">
+                  <Link href={n.href} data-tap
+                    className="body !text-[var(--t-small)] transition-opacity duration-[--dur-fast] hover:opacity-60">
                     {n.label}
                   </Link>
                 </li>
@@ -69,18 +71,21 @@ export function Footer() {
             <p className="micro mb-[var(--space-sm)]">Connect</p>
             <ul className="flex flex-col gap-1">
               <li>
-                <a href={links.github} target="_blank" rel="noreferrer noopener" className="body !text-[var(--t-small)] transition-opacity duration-[--dur-fast] hover:opacity-60">
+                <a href={links.github} target="_blank" rel="noreferrer noopener" data-tap
+                    className="body !text-[var(--t-small)] transition-opacity duration-[--dur-fast] hover:opacity-60">
                   GitHub
                 </a>
               </li>
               <li>
-                <a href={`mailto:${links.email}`} className="body !text-[var(--t-small)] transition-opacity duration-[--dur-fast] hover:opacity-60">
+                <a href={`mailto:${links.email}`} data-tap
+                    className="body !text-[var(--t-small)] transition-opacity duration-[--dur-fast] hover:opacity-60">
                   Email
                 </a>
               </li>
               <li>
                 {links.devpost ? (
-                  <a href={links.devpost} target="_blank" rel="noreferrer noopener" className="body !text-[var(--t-small)] transition-opacity duration-[--dur-fast] hover:opacity-60">
+                  <a href={links.devpost} target="_blank" rel="noreferrer noopener" data-tap
+                    className="body !text-[var(--t-small)] transition-opacity duration-[--dur-fast] hover:opacity-60">
                     Devpost
                   </a>
                 ) : (
@@ -89,7 +94,8 @@ export function Footer() {
               </li>
               <li>
                 {links.console ? (
-                  <a href={links.console} target="_blank" rel="noreferrer noopener" className="body !text-[var(--t-small)] transition-opacity duration-[--dur-fast] hover:opacity-60">
+                  <a href={links.console} target="_blank" rel="noreferrer noopener" data-tap
+                    className="body !text-[var(--t-small)] transition-opacity duration-[--dur-fast] hover:opacity-60">
                     Live console
                   </a>
                 ) : (

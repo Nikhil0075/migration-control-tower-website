@@ -68,7 +68,7 @@
   --t-lead: clamp(1.25rem, 1.9vw, 1.75rem);
   --t-body: clamp(1rem, 1.15vw, 1.25rem);
   --t-small: clamp(0.875rem, 0.95vw, 1rem);
-  --t-micro: clamp(0.625rem, 0.72vw, 0.8125rem);
+  --t-micro: clamp(0.6875rem, 0.72vw, 0.8125rem);
 }
 
 /* Light editorial surface. Applied per-section, inverting the same tokens so
@@ -101,32 +101,78 @@
 
 /* ============================================================== base ===== */
 
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
+/* These element resets MUST live in @layer base.
+   Unlayered CSS beats anything inside a layer regardless of specificity, so an
+   unlayered `button { padding: 0 }` silently overrode every padding utility on
+   every button in the app — which is exactly what it was doing, leaving tap
+   targets 12px tall on touch devices. Tailwind's utilities live in
+   @layer utilities, which wins over @layer base, so utilities now apply. */
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
 
-html {
-  -webkit-text-size-adjust: 100%;
-  scroll-behavior: auto; /* Lenis owns scrolling */
-}
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: auto; /* Lenis owns scrolling */
+  }
 
-body {
-  margin: 0;
-  background: #090909;
-  color: var(--color-fg);
-  font-family: var(--font-sans);
-  font-size: var(--t-body);
-  line-height: 1.55;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  font-synthesis-weight: none;
-  overflow-x: clip;
+  body {
+    margin: 0;
+    background: #090909;
+    color: var(--color-fg);
+    font-family: var(--font-sans);
+    font-size: var(--t-body);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-synthesis-weight: none;
+    overflow-x: clip;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  p,
+  figure,
+  blockquote {
+    margin: 0;
+  }
+
+  ul,
+  ol {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  img,
+  video,
+  svg {
+    display: block;
+    max-width: 100%;
+  }
+
+  button {
+    font: inherit;
+    color: inherit;
+    background: none;
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
 }
 
 /* Lenis is running: it translates the body, so the html element must not
-   also scroll natively. */
+   also scroll natively. Left unlayered on purpose — this must win. */
 html.lenis,
 html.lenis body {
   height: auto;
@@ -136,44 +182,6 @@ html.lenis body {
 }
 .lenis.lenis-stopped {
   overflow: hidden;
-}
-
-h1,
-h2,
-h3,
-h4,
-p,
-figure,
-blockquote {
-  margin: 0;
-}
-
-ul,
-ol {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-img,
-video,
-svg {
-  display: block;
-  max-width: 100%;
-}
-
-button {
-  font: inherit;
-  color: inherit;
-  background: none;
-  border: 0;
-  padding: 0;
-  cursor: pointer;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
 }
 
 ::selection {
@@ -377,6 +385,30 @@ a {
 @media (hover: hover) and (pointer: fine) {
   .custom-cursor {
     display: block;
+  }
+}
+
+/* ================================================== touch ergonomics ====== */
+
+/* Finger-sized hit areas on touch devices, without touching desktop spacing.
+   Marked explicitly with data-tap rather than by broad selector: the fullscreen
+   menu's links are baseline-aligned flex rows, and forcing display/alignment on
+   every link in a region would wreck them. `display` is set here because
+   min-height alone does nothing to an inline element — which is why the footer
+   links stayed 21px tall on the first attempt at this.
+   44px is Apple's minimum; Android asks for 48dp. */
+@media (hover: none), (pointer: coarse) {
+  [data-tap] {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  /* Already flex, so they only need the height floor. */
+  header button,
+  header a,
+  #site-menu button {
+    min-height: 44px;
   }
 }
 

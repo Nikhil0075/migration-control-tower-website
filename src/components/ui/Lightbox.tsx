@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useSmoothScroll } from "@/providers/SmoothScroll";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 
 export type LightboxItem = {
   /** Image shown in the viewer. Use the largest variant available. */
@@ -50,6 +51,14 @@ export function Lightbox({
   const [zoom, setZoom] = useState(1);
   const [pan, setPan] = useState({ x: 0, y: 0 });
   const drag = useRef<{ x: number; y: number; px: number; py: number } | null>(null);
+
+  // Every pointer currently down, so a second finger can start a pinch.
+  const pointers = useRef(new Map<number, { x: number; y: number }>());
+  const pinch = useRef<{ dist: number; zoom: number } | null>(null);
+
+  // Touch devices have no wheel and no "click" — the hint has to match the
+  // gesture the visitor actually has available.
+  const coarse = useMediaQuery("(pointer: coarse)");
 
   const open = index !== null;
   const item = open ? items[index] : null;
@@ -197,7 +206,10 @@ export function Lightbox({
       <div
         ref={stageRef}
         className="relative flex flex-1 items-center justify-center overflow-hidden px-[var(--gutter)] pb-[var(--space-sm)]"
-        style={{ cursor: canZoom ? (zoom > 1 ? (drag.current ? "grabbing" : "grab") : "zoom-in") : "default" }}
+        style={{
+          cursor: canZoom ? (zoom > 1 ? (drag.current ? "grabbing" : "grab") : "zoom-in") : "default",
+          touchAction: canZoom ? "none" : "auto",
+        }}
         onWheel={(e) => {
           if (!canZoom) return;
           setZoom((z) => Math.max(1, Math.min(MAX_ZOOM, z - Math.sign(e.deltaY) * 0.35)));
@@ -209,18 +221,45 @@ export function Lightbox({
           if (e.target === e.currentTarget) onClose();
         }}
         onPointerDown={(e) => {
-          if (!canZoom || zoom <= 1) return;
-          drag.current = { x: e.clientX, y: e.clientY, px: pan.x, py: pan.y };
-          (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+          if (!canZoom) return;
+          pointers.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
+
+          if (pointers.current.size === 2) {
+            // Second finger down: start a pinch and abandon any pan in progress.
+            const [a, b] = [...pointers.current.values()];
+            pinch.current = { dist: Math.hypot(a.x - b.x, a.y - b.y) || 1, zoom };
+            drag.current = null;
+          } else if (pointers.current.size === 1 && zoom > 1) {
+            drag.current = { x: e.clientX, y: e.clientY, px: pan.x, py: pan.y };
+          }
         }}
         onPointerMove={(e) => {
+          if (!canZoom) return;
+          if (pointers.current.has(e.pointerId)) {
+            pointers.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
+          }
+
+          if (pinch.current && pointers.current.size >= 2) {
+            const [a, b] = [...pointers.current.values()];
+            const dist = Math.hypot(a.x - b.x, a.y - b.y);
+            const next = (pinch.current.zoom * dist) / pinch.current.dist;
+            setZoom(Math.max(1, Math.min(MAX_ZOOM, next)));
+            return;
+          }
+
           const d = drag.current;
           if (!d) return;
           setPan(clamp({ x: d.px + (e.clientX - d.x), y: d.py + (e.clientY - d.y) }, zoom));
         }}
         onPointerUp={(e) => {
+          pointers.current.delete(e.pointerId);
+          if (pointers.current.size < 2) pinch.current = null;
+          if (pointers.current.size === 0) drag.current = null;
+        }}
+        onPointerCancel={(e) => {
+          pointers.current.delete(e.pointerId);
+          pinch.current = null;
           drag.current = null;
-          (e.currentTarget as HTMLElement).releasePointerCapture(e.pointerId);
         }}
       >
         {/* Plain img, not next/image: this is a already-sized full-resolution
@@ -250,7 +289,9 @@ export function Lightbox({
           {item.caption}
           {canZoom && (
             <span className="micro ml-3 !text-[var(--color-fg-dim)]">
-              Scroll or double-click to zoom · drag to pan
+              {coarse
+                ? "Pinch or double-tap to zoom · drag to pan"
+                : "Scroll or double-click to zoom · drag to pan"}
             </span>
           )}
         </p>

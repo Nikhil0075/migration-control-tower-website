@@ -51,13 +51,14 @@ export function ConsoleAccess({ className }: { className?: string }) {
           >
             <dt className="micro w-[9ch] shrink-0">{r.label}</dt>
             <dd className="min-w-0 flex-1">
-              <span className="body select-all break-all !text-[var(--t-small)] !text-[color:var(--fg)]">
+              <span className="body select-all break-words !text-[var(--t-small)] !text-[color:var(--fg)]">
                 {r.value}
               </span>
             </dd>
             {r.copyable && (
               <button
                 type="button"
+                data-tap
                 onClick={() => copy(r.label, r.value)}
                 className="micro shrink-0 transition-opacity duration-[--dur-fast] hover:opacity-60"
                 aria-label={`Copy ${r.label.toLowerCase()}`}
