@@ -21,6 +21,31 @@ npm run assets                   # regenerate media from the artifact archive
 > `.next`, and the build overwrites the dev server's client chunks, which breaks
 > hydration until you `rm -rf .next` and restart.
 
+## Deployment
+
+Live: <https://migration-control-tower-nikhils-projects-50c91a6e.vercel.app>
+
+Hosted on Vercel, linked to this repository. **Every push to `main` deploys to
+production automatically** — there is no manual deploy step.
+
+`npm run assets` is deliberately *not* part of the build. The build host has no
+ffmpeg or Pillow, so everything under `public/media` is committed and
+`npm run build` is all Vercel runs.
+
+### The production domain
+
+Never hardcoded. `src/lib/siteUrl.ts` resolves it, and `metadataBase`, the
+sitemap and robots.txt all read from there:
+
+1. `NEXT_PUBLIC_SITE_URL` if set — use this when a custom domain is added.
+2. `VERCEL_PROJECT_PRODUCTION_URL`, injected by Vercel. This is always the
+   *production* domain even during a preview build, so preview deployments never
+   advertise themselves as canonical.
+3. `http://localhost:3300` locally.
+
+To attach a custom domain: add it in the Vercel project, then set
+`NEXT_PUBLIC_SITE_URL` to it in the project's environment variables.
+
 ## What you need to fill in
 
 Everything below is a one-file edit. No layout work is required.

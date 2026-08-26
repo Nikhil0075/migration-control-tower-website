@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { AppShell } from "@/components/shell/AppShell";
 import { site } from "@/data/site";
+import { siteUrl } from "@/lib/siteUrl";
 
 const geist = Geist({
   subsets: ["latin"],
@@ -19,7 +20,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://migration-control-tower.example"),
+  metadataBase: new URL(siteUrl),
   title: {
     default: `${site.title} | Governed Agentic Migration`,
     template: `%s | ${site.name}`,
