@@ -1,0 +1,445 @@
+@import "tailwindcss";
+
+/* ==========================================================================
+   Migration Control Tower — design tokens
+   One accent (#4DCCBE) sampled from the project's own agent glyphs and the
+   "teal pulse" described in story/story.md. Everything else is monochrome.
+   ========================================================================== */
+
+@theme {
+  --color-bg: #090909;
+  --color-surface: #101010;
+  --color-surface-2: #161616;
+  --color-navy: #0b2241;
+
+  --color-fg: #f2f2ee;
+  --color-fg-muted: #b9b9b2;
+  --color-fg-dim: #7c7c76;
+
+  --color-paper: #e9e8e2;
+  --color-paper-2: #f0efe9;
+  --color-ink: #111111;
+  --color-ink-muted: #4a4a45;
+
+  --color-accent: #4dccbe;
+
+  --font-sans: var(--font-geist), ui-sans-serif, system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, "SF Mono", Menlo, monospace;
+}
+
+:root {
+  /* surfaces resolved per-section by [data-surface] below */
+  --line: rgba(242, 242, 238, 0.16);
+  --line-soft: rgba(242, 242, 238, 0.08);
+  --fg: #f2f2ee;
+  --fg-muted: #b9b9b2;
+  --fg-dim: #7c7c76;
+  --bg: #090909;
+
+  /* The ground behind media, and the ink for empty placeholder frames. Both
+     flip with the surface so a frame never renders dark inside a light
+     section. */
+  --frame-bg: #141414;
+  --frame-fg: rgba(242, 242, 238, 0.34);
+
+  --accent: #4dccbe;
+
+  /* motion tokens — every component reads these, none invents its own */
+  --dur-fast: 250ms;
+  --dur-med: 600ms;
+  --dur-slow: 1100ms;
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* fluid space */
+  --space-xs: clamp(8px, 0.6vw, 12px);
+  --space-sm: clamp(16px, 1.2vw, 24px);
+  --space-md: clamp(28px, 2.4vw, 48px);
+  --space-lg: clamp(48px, 5vw, 96px);
+  --space-xl: clamp(80px, 9vw, 160px);
+  --space-2xl: clamp(112px, 14vw, 260px);
+
+  --gutter: clamp(20px, 4vw, 72px);
+  --header-h: clamp(64px, 7vw, 88px);
+
+  /* type scale */
+  --t-display: clamp(3.25rem, 9vw, 10.625rem);
+  --t-section: clamp(2.75rem, 7vw, 7.5rem);
+  --t-sub: clamp(1.75rem, 3.4vw, 4rem);
+  --t-lead: clamp(1.25rem, 1.9vw, 1.75rem);
+  --t-body: clamp(1rem, 1.15vw, 1.25rem);
+  --t-small: clamp(0.875rem, 0.95vw, 1rem);
+  --t-micro: clamp(0.625rem, 0.72vw, 0.8125rem);
+}
+
+/* Light editorial surface. Applied per-section, inverting the same tokens so
+   every component works on both grounds without knowing which it is on. */
+[data-surface="paper"] {
+  --bg: #e9e8e2;
+  --fg: #111111;
+  --fg-muted: #4a4a45;
+  --fg-dim: #6f6f68;
+  --line: rgba(17, 17, 17, 0.18);
+  --line-soft: rgba(17, 17, 17, 0.09);
+  --frame-bg: #dcdad2;
+  --frame-fg: rgba(17, 17, 17, 0.38);
+  background-color: var(--bg);
+  color: var(--fg);
+}
+
+[data-surface="dark"] {
+  --bg: #090909;
+  --fg: #f2f2ee;
+  --fg-muted: #b9b9b2;
+  --fg-dim: #7c7c76;
+  --line: rgba(242, 242, 238, 0.16);
+  --line-soft: rgba(242, 242, 238, 0.08);
+  --frame-bg: #141414;
+  --frame-fg: rgba(242, 242, 238, 0.34);
+  background-color: var(--bg);
+  color: var(--fg);
+}
+
+/* ============================================================== base ===== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: auto; /* Lenis owns scrolling */
+}
+
+body {
+  margin: 0;
+  background: #090909;
+  color: var(--color-fg);
+  font-family: var(--font-sans);
+  font-size: var(--t-body);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-synthesis-weight: none;
+  overflow-x: clip;
+}
+
+/* Lenis is running: it translates the body, so the html element must not
+   also scroll natively. */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+h1,
+h2,
+h3,
+h4,
+p,
+figure,
+blockquote {
+  margin: 0;
+}
+
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+img,
+video,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+::selection {
+  background: var(--accent);
+  color: #06201d;
+}
+
+/* Focus: visible, on-brand, never suppressed. */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 1px;
+}
+
+/* ============================================================ layout ===== */
+
+.shell {
+  padding-inline: var(--gutter);
+}
+
+.grid12 {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: clamp(12px, 1.6vw, 28px);
+}
+
+@media (max-width: 860px) {
+  .grid12 {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+}
+
+.rule {
+  border: 0;
+  border-top: 1px solid var(--line);
+  width: 100%;
+}
+
+/* ============================================================== type ===== */
+
+.display,
+.h-section,
+.h-sub {
+  font-weight: 500;
+  letter-spacing: -0.04em;
+  line-height: 0.92;
+  text-wrap: balance;
+}
+
+.display {
+  font-size: var(--t-display);
+  line-height: 0.88;
+  letter-spacing: -0.045em;
+}
+
+.h-section {
+  font-size: var(--t-section);
+}
+
+.h-sub {
+  font-size: var(--t-sub);
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.lead {
+  font-size: var(--t-lead);
+  line-height: 1.4;
+  letter-spacing: -0.015em;
+  color: var(--fg-muted);
+  text-wrap: pretty;
+}
+
+.body {
+  font-size: var(--t-body);
+  color: var(--fg-muted);
+  text-wrap: pretty;
+}
+
+.micro {
+  font-family: var(--font-mono);
+  font-size: var(--t-micro);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  line-height: 1.2;
+  color: var(--fg-dim);
+}
+
+.numeral {
+  font-weight: 500;
+  letter-spacing: -0.05em;
+  line-height: 0.82;
+  font-variant-numeric: tabular-nums;
+}
+
+.accent {
+  color: var(--accent);
+}
+
+/* ============================================== motion primitives ======== */
+
+/* Split-line reveal: each line sits in an overflow-hidden mask. */
+.line-mask {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.08em;
+  margin-bottom: -0.08em;
+}
+
+/* Elements the reveal hooks will animate. Hidden only once JS confirms it can
+   animate them — see [data-motion-ready] — so a JS failure never blanks the page. */
+[data-motion-ready] [data-reveal] {
+  opacity: 0;
+  will-change: opacity, transform;
+}
+
+[data-motion-ready] [data-reveal-image] > * {
+  clip-path: inset(100% 0 0 0);
+  will-change: clip-path;
+}
+
+/* Hero entrance elements. Hidden only once JS has confirmed it will run their
+   timeline — never in the served HTML. */
+[data-motion-ready] [data-fade] {
+  opacity: 0;
+}
+
+.media-frame {
+  overflow: hidden;
+  position: relative;
+  background: var(--frame-bg);
+}
+
+.media-frame > img,
+.media-frame > video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--dur-slow) var(--ease);
+}
+
+.media-frame[data-hover-zoom]:hover > img,
+.media-frame[data-hover-zoom]:hover > video {
+  transform: scale(1.035);
+}
+
+/* Fine film grain over cinematic media — hides 720p softness and unifies the
+   grade across the six source films. */
+.grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.16;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+}
+
+/* The scroll-scrubbed hero exists only where it can actually work: a real
+   pointer-sized viewport, and a visitor who has not asked for less motion.
+   Choosing the branch in CSS rather than JS state means the server renders the
+   correct one — no swap on first paint — while the static variant's copy still
+   ships in the HTML for crawlers and for no-JS readers. */
+.hero-scrub {
+  display: none;
+}
+
+@media (min-width: 1025px) and (prefers-reduced-motion: no-preference) {
+  .hero-scrub {
+    display: block;
+  }
+  .hero-static {
+    display: none;
+  }
+}
+
+/* The pinned film sequence, chosen the same way as the hero: in CSS, so the
+   stage exists in the DOM from first paint. That matters for more than a flash
+   — every ScrollTrigger caches its start position when it is created, so a pin
+   that only appears after a JS media-query settles is created *after* the pins
+   below it, which have already measured a document that is missing its spacer. */
+.seq-stage {
+  display: none;
+}
+
+@media (min-width: 1025px) and (prefers-reduced-motion: no-preference) {
+  .seq-stage {
+    display: block;
+  }
+  .seq-stacked {
+    display: none;
+  }
+}
+
+/* Custom cursor: fine pointers only. Kept in CSS rather than an arbitrary
+   Tailwind variant, which cannot express this two-clause media query. */
+.custom-cursor {
+  display: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .custom-cursor {
+    display: block;
+  }
+}
+
+/* ====================================================== accessibility ==== */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 200;
+  transform: translateY(-160%);
+  background: var(--accent);
+  color: #06201d;
+  padding: 12px 18px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  transition: transform var(--dur-fast) var(--ease);
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+/* Reduced motion: nothing is hidden, nothing animates, layout is untouched. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  [data-motion-ready] [data-reveal],
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  [data-motion-ready] [data-reveal-image] > *,
+  [data-reveal-image] > * {
+    clip-path: none !important;
+  }
+
+  /* Hero entrance elements stay fully visible: no timeline runs to reveal them. */
+  [data-motion-ready] [data-fade],
+  [data-fade] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
