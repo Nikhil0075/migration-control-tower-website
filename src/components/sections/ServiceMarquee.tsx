@@ -17,7 +17,7 @@ import { services } from "@/data/services";
  * a screen reader hears the list once.
  *
  * Under reduced motion the strip does not move — which would leave most of the
- * seventeen clipped off the right edge with no way to reach them. So that case
+ * the list clipped off the right edge with no way to reach it. So that case
  * gets a wrapped static list instead: same content, no motion, nothing hidden.
  */
 export function ServiceMarquee() {
@@ -112,8 +112,8 @@ export function ServiceMarquee() {
           className="micro border-b pb-[var(--space-sm)] !normal-case !tracking-normal"
           style={{ borderColor: "var(--line)" }}
         >
-          Seventeen managed services, one identity per stage. Nothing here is aspirational —
-          every one is in the deployed topology.
+          Eighteen services and frameworks, one service identity per stage. Nothing here is
+          aspirational — every one is in the deployed topology.
         </p>
       </div>
     </section>

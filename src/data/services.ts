@@ -1,14 +1,17 @@
 /**
- * The cloud services the fleet actually runs on.
+ * The services and frameworks the fleet actually runs on.
  *
  * Every entry is drawn from the project's own stack (see src/data/tech.ts) — no
- * badge here is aspirational.
+ * badge here is aspirational. Mostly managed cloud services, plus the two
+ * non-service pieces the deployed system genuinely stands on: Terraform, which
+ * provisions it, and Oracle JET, which the operator console is built in.
  *
  * The marks are simplified glyphs drawn for this site, NOT the vendors' official
- * product logos. That is deliberate: official Google Cloud iconography is
+ * product logos. That is deliberate: official vendor iconography is
  * multi-coloured and varies in weight, which would fight the restrained
  * monochrome art direction and put third-party trademarks in a public repo.
- * These are one stroke weight, one colour, and inherit currentColor.
+ * These are one stroke weight, one colour, and inherit currentColor — so each
+ * mark depicts the thing's role in this system rather than its brand.
  *
  * To swap in official iconography instead, replace `mark` with an <svg> import
  * per service — nothing else in ServiceMarquee needs to change.
@@ -127,6 +130,11 @@ export const services: Service[] = [
     name: "Firebase Auth",
     role: "Operator identity",
     mark: svg([p("M6 17 12 3l3.4 6.2L18 17l-6 4-6-4Z", "a"), p("M6 17l6-7.5 3.4-.3", "b")]),
+  },
+  {
+    name: "Oracle JET",
+    role: "Operator console",
+    mark: svg([rect(3, 4.5, 18, 15, 1.8, "a"), p("M3 9h18M5.6 6.75h2.6", "b"), p("M9.5 9v10.5", "c")]),
   },
   {
     name: "Terraform",
