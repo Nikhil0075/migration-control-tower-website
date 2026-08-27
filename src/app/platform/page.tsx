@@ -4,6 +4,7 @@ import { Section } from "@/components/ui/Section";
 import { SectionIndex, SplitHeading, Reveal } from "@/components/ui/Type";
 import { EditorialAccordion } from "@/components/sections/EditorialAccordion";
 import { NextPage } from "@/components/ui/NextPage";
+import { ServiceMarquee } from "@/components/sections/ServiceMarquee";
 import { StatePath } from "@/components/sections/StatePath";
 import { fleetPrinciple } from "@/data/agents";
 import { steps, stateNote } from "@/data/lifecycle";
@@ -25,6 +26,8 @@ export default function PlatformPage() {
         film="agent-fleet"
         filmAlt="Seven precision-machined modules of differing form stand in a shallow arc; a single teal light travels along the floor from left to right, waking each module's recessed indicator in turn until all seven hold their light."
       />
+
+      <ServiceMarquee />
 
       {/* The fleet ---------------------------------------------------------- */}
       <Section id="fleet" label="The agent fleet">
