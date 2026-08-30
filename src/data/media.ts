@@ -316,8 +316,8 @@ export const media = {
   },
   "team": {
     "mousmi": {
-      "w": 1600,
-      "h": 2000
+      "w": 900,
+      "h": 1125
     },
     "nikhil": {
       "w": 600,

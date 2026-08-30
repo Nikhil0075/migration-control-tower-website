@@ -28,7 +28,7 @@ export const site = {
 export const links = {
   github: "https://github.com/Nikhil0075/MIGRATION-CONTROL-TOWER",
   email: "nikhilranjanmurmu75@gmail.com",
-  devpost: "",
+  devpost: "https://devpost.com/software/migration-control-tower",
   console: "https://control-tower-ui-872516377824.us-central1.run.app/",
 } as const;
 

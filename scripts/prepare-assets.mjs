@@ -237,7 +237,7 @@ const FILMS = [
  */
 const TEAM_FOCUS = {
   nikhil: 0.40,   // tight headshot, face already high
-  mousmi: 0.66,   // tall phone photo, subject low beneath a lot of sky
+  mousmi: 0.44,   // 9:16 phone photo, face just above centre
 };
 
 async function run() {
